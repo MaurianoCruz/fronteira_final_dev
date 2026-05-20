@@ -26,7 +26,7 @@ app.post("/api/suporte-ai", async (req, res) => {
     }
 
     const resposta = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.0-flash-exp",
       contents: `
 Você é um tutor acadêmico da plataforma FronteiraFinal.
 Explique programação para alunos iniciantes de forma didática.
