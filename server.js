@@ -26,18 +26,20 @@ app.post("/api/suporte-ai", async (req, res) => {
     }
 
     const resposta = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
-      contents: `
+  model: "gemini-2.5-flash",
+  contents: `
 Você é um tutor acadêmico da plataforma FronteiraFinal.
 Explique programação para alunos iniciantes de forma didática.
 Não entregue apenas a resposta pronta: explique o raciocínio.
 Use exemplos simples quando necessário.
-Temas principais: HTML, CSS, JavaScript, Python, Banco de Dados, SQL, Git e GitHub.
+
+Temas principais:
+HTML, CSS, JavaScript, Python, Banco de Dados, SQL, Git e GitHub.
 
 Dúvida do aluno:
 ${pergunta}
-      `
-    });
+  `
+});
 
     res.json({
       resposta: resposta.text
