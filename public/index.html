@@ -1,23 +1,31 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FronteiraFinal Support - Suporte Acadêmico de Programação</title>
+from pathlib import Path
+import re
 
-  <style>
+candidatos = [
+    Path("/mnt/data/index_corrigido_fronteirafinal.html"),
+    Path("/mnt/data/Código colado(1).html"),
+    Path("/mnt/data/pagina_fronteirafinal_com_ia.html"),
+]
+
+origem = next((p for p in candidatos if p.exists()), None)
+if origem is None:
+    raise FileNotFoundError("Não encontrei o arquivo HTML base.")
+
+html = origem.read_text(encoding="utf-8")
+
+novo_css = """
     :root {
-      --bg: #07111f;
-      --panel: #0f1b2d;
-      --panel-2: #111f35;
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.82);
       --primary: #38bdf8;
       --secondary: #8b5cf6;
       --success: #22c55e;
       --warning: #facc15;
       --text: #e5e7eb;
-      --muted: #a7b0c0;
-      --border: rgba(148, 163, 184, 0.24);
-      --shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.22);
+      --glow-blue: 0 0 28px rgba(56, 189, 248, 0.32);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -32,9 +40,26 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top left, #12345c 0, var(--bg) 35%, #050914 100%);
       color: var(--text);
       min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 12%, rgba(139, 92, 246, 0.22), transparent 26%),
+        linear-gradient(135deg, #020617 0%, #07111f 48%, #0f172a 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.12;
+      background-image:
+        linear-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.25) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
     }
 
     a {
@@ -45,16 +70,17 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 10;
-      background: rgba(7, 17, 31, 0.9);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      z-index: 20;
+      background: rgba(2, 6, 23, 0.78);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
     }
 
     .nav {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 14px 20px;
+      padding: 16px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -62,49 +88,88 @@
     }
 
     .logo {
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      color: var(--primary);
+      font-weight: 900;
+      letter-spacing: 0.7px;
+      color: white;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo::before {
+      content: "";
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 16px var(--primary), 0 0 28px var(--secondary);
+    }
+
+    .logo::after {
+      content: "ONLINE";
+      font-size: 0.62rem;
+      color: #67e8f9;
+      border: 1px solid rgba(103, 232, 249, 0.35);
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(8, 47, 73, 0.35);
     }
 
     .nav-links {
       display: flex;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: var(--muted);
+    }
+
+    .nav-links a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: 0.25s;
     }
 
     .nav-links a:hover {
       color: white;
+      border-color: rgba(56, 189, 248, 0.32);
+      background: rgba(56, 189, 248, 0.08);
+      box-shadow: var(--glow-blue);
     }
 
     header {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 70px 20px 36px;
+      padding: 86px 20px 42px;
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 26px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
       align-items: center;
+      position: relative;
     }
 
     .hero h1 {
-      font-size: clamp(2rem, 5vw, 4.2rem);
-      line-height: 1.05;
-      margin-bottom: 18px;
+      font-size: clamp(2.3rem, 5vw, 4.8rem);
+      line-height: 1.02;
+      margin-bottom: 20px;
+      letter-spacing: -1.6px;
     }
 
     .hero h1 span {
-      color: var(--primary);
+      color: transparent;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa, #22c55e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.28));
     }
 
     .hero p {
       color: #cbd5e1;
-      line-height: 1.7;
-      font-size: 1.1rem;
-      max-width: 690px;
-      margin-bottom: 24px;
+      line-height: 1.8;
+      font-size: 1.08rem;
+      max-width: 720px;
+      margin-bottom: 26px;
     }
 
     .actions {
@@ -113,95 +178,130 @@
       flex-wrap: wrap;
     }
 
-    .btn {
+    .btn, button {
       border: none;
       padding: 13px 18px;
       border-radius: 999px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       transition: 0.25s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      letter-spacing: 0.2px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--success), #86efac);
-      color: #052e16;
+      background: linear-gradient(135deg, #22d3ee, #38bdf8, #8b5cf6);
+      color: #020617;
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.75);
       color: white;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(148, 163, 184, 0.28);
     }
 
-    .btn:hover {
+    .btn:hover, button:hover {
       transform: translateY(-2px);
-      filter: brightness(1.05);
+      filter: brightness(1.08);
+      box-shadow: var(--glow-blue);
+    }
+
+    .hero-card, .card, .support-ai-section {
+      background:
+        linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(17, 24, 39, 0.92)),
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 44%);
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
 
     .hero-card {
-      background: linear-gradient(145deg, rgba(56, 189, 248, 0.18), rgba(139, 92, 246, 0.16));
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 26px;
-      box-shadow: var(--shadow);
+      border-radius: 30px;
+      padding: 28px;
+      overflow: hidden;
     }
 
     .hero-card h2 {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       color: white;
     }
 
     .checklist {
       list-style: none;
       display: grid;
-      gap: 12px;
+      gap: 13px;
       color: #dbeafe;
-      line-height: 1.5;
+      line-height: 1.55;
+    }
+
+    .checklist li {
+      background: rgba(2, 6, 23, 0.26);
+      border: 1px solid rgba(148, 163, 184, 0.13);
+      border-radius: 14px;
+      padding: 10px 12px;
     }
 
     .checklist li::before {
-      content: "✓";
-      color: var(--success);
-      font-weight: 800;
+      content: "▸";
+      color: var(--primary);
+      font-weight: 900;
       margin-right: 8px;
+      text-shadow: 0 0 10px var(--primary);
     }
 
     .container {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 26px 20px 60px;
+      padding: 26px 20px 70px;
+      position: relative;
     }
 
     .section-title {
-      margin: 28px 0 16px;
+      margin: 36px 0 18px;
     }
 
     .section-title h2 {
-      font-size: 2rem;
+      font-size: 2.1rem;
       margin-bottom: 8px;
+      color: white;
+    }
+
+    .section-title h2::before {
+      content: "◆";
+      color: var(--primary);
+      margin-right: 10px;
+      font-size: 1rem;
+      vertical-align: middle;
+      text-shadow: 0 0 14px var(--primary);
     }
 
     .section-title p {
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    .grid {
+    .grid, .planos {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
 
     .card {
-      background: rgba(15, 27, 45, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+      padding: 23px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.48);
+      box-shadow: var(--shadow), var(--glow-blue);
     }
 
     .card h3, .card h2 {
@@ -210,25 +310,27 @@
     }
 
     .card p {
-      line-height: 1.6;
+      line-height: 1.65;
       color: #cbd5e1;
       margin-bottom: 14px;
     }
 
     .tag {
       display: inline-block;
-      background: rgba(56, 189, 248, 0.14);
+      background: rgba(56, 189, 248, 0.12);
       color: #7dd3fc;
-      padding: 6px 11px;
+      padding: 7px 12px;
       border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
+      font-size: 0.76rem;
+      font-weight: 900;
       margin-bottom: 12px;
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
     }
 
     .search-box {
-      margin: 18px 0;
+      margin: 20px 0;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 10px;
@@ -236,13 +338,19 @@
 
     .search-box input, textarea, select {
       width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
       outline: none;
       font-size: 1rem;
-      background: #0b1424;
+      background: rgba(2, 6, 23, 0.72);
       color: white;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.24);
+    }
+
+    .search-box input:focus, textarea:focus, select:focus {
+      border-color: rgba(56, 189, 248, 0.65);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
     }
 
     .codigo-lista {
@@ -250,20 +358,16 @@
       gap: 20px;
     }
 
-    .codigo-card {
-      position: relative;
-      overflow: hidden;
-    }
-
     pre {
-      background: #020617;
+      background: linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(7, 17, 31, 0.96));
       color: #86efac;
-      padding: 18px;
-      border-radius: 14px;
+      padding: 20px;
+      border-radius: 16px;
       overflow-x: auto;
-      font-size: 0.92rem;
+      font-size: 0.93rem;
       margin-bottom: 15px;
-      border: 1px solid #1e293b;
+      border: 1px solid rgba(34, 197, 94, 0.20);
+      box-shadow: inset 0 0 28px rgba(34, 197, 94, 0.05);
     }
 
     .duvidas {
@@ -273,36 +377,31 @@
     }
 
     .resposta-box {
-      background: #07111f;
-      border: 1px dashed rgba(56, 189, 248, 0.45);
-      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.72);
+      border: 1px dashed rgba(56, 189, 248, 0.55);
+      border-radius: 18px;
       padding: 18px;
       min-height: 170px;
       color: #dbeafe;
-      line-height: 1.65;
-    }
-
-    .planos {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      line-height: 1.7;
     }
 
     .price {
       font-size: 2rem;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--warning);
       margin: 12px 0;
+      text-shadow: 0 0 18px rgba(250, 204, 21, 0.24);
     }
 
     .small {
       color: var(--muted);
       font-size: 0.9rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .destaque {
-      border-color: rgba(250, 204, 21, 0.55);
+      border-color: rgba(250, 204, 21, 0.6);
       transform: scale(1.02);
     }
 
@@ -310,12 +409,101 @@
       display: none !important;
     }
 
+    .support-ai-section {
+      border-radius: 26px;
+      padding: 30px;
+      margin: 42px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .support-ai-section::before {
+      content: "AI CORE ACTIVE";
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      font-size: 0.68rem;
+      letter-spacing: 1.4px;
+      color: rgba(125, 211, 252, 0.72);
+    }
+
+    .support-ai-header h2 {
+      color: #7dd3fc;
+      margin: 10px 0;
+      font-size: 1.9rem;
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.22);
+    }
+
+    .support-ai-header p {
+      color: #cbd5e1;
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .ai-chat-box {
+      background: rgba(2, 6, 23, 0.78);
+      border: 1px solid rgba(30, 41, 59, 0.92);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .ai-messages {
+      min-height: 190px;
+      max-height: 370px;
+      overflow-y: auto;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(2, 6, 23, 0.84));
+      border-radius: 16px;
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+
+    .ai-message {
+      padding: 13px 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .ai-message.bot {
+      background: rgba(15, 23, 42, 0.92);
+      color: #e5e7eb;
+      border-left: 4px solid #38bdf8;
+    }
+
+    .ai-message.user {
+      background: rgba(5, 46, 22, 0.9);
+      color: #dcfce7;
+      border-left: 4px solid #22c55e;
+    }
+
+    .ai-input-area {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .ai-input-area button {
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      color: #020617;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.28);
+    }
+
+    .ai-note {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
     footer {
       text-align: center;
-      padding: 32px 20px;
+      padding: 34px 20px;
       color: #94a3b8;
-      border-top: 1px solid var(--border);
-      background: rgba(5, 9, 20, 0.65);
+      border-top: 1px solid rgba(56, 189, 248, 0.18);
+      background: rgba(2, 6, 23, 0.82);
     }
 
     @media (max-width: 850px) {
@@ -332,518 +520,25 @@
         flex-direction: column;
       }
 
-      .search-box {
+      .search-box, .ai-input-area {
         grid-template-columns: 1fr;
       }
-    }
 
-    .support-ai-section {
-      background: linear-gradient(135deg, #111827, #1e1b4b);
-      border: 1px solid #334155;
-      border-radius: 18px;
-      padding: 28px;
-      margin: 35px 0;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-    }
-
-    .support-ai-header h2 {
-      color: #38bdf8;
-      margin: 10px 0;
-      font-size: 1.8rem;
-    }
-
-    .support-ai-header p {
-      color: #cbd5e1;
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .ai-chat-box {
-      background: #020617;
-      border: 1px solid #1e293b;
-      border-radius: 15px;
-      padding: 18px;
-    }
-
-    .ai-messages {
-      min-height: 180px;
-      max-height: 360px;
-      overflow-y: auto;
-      padding: 10px;
-      margin-bottom: 15px;
-      background: #0f172a;
-      border-radius: 12px;
-      border: 1px solid #1e293b;
-    }
-
-    .ai-message {
-      padding: 12px 14px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-
-    .ai-message.bot {
-      background: #1e293b;
-      color: #e5e7eb;
-      border-left: 4px solid #38bdf8;
-    }
-
-    .ai-message.user {
-      background: #052e16;
-      color: #dcfce7;
-      border-left: 4px solid #22c55e;
-    }
-
-    .ai-input-area {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .ai-input-area textarea {
-      width: 100%;
-      resize: vertical;
-      padding: 14px;
-      border-radius: 10px;
-      border: 1px solid #334155;
-      background: #111827;
-      color: #e5e7eb;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .ai-note {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-top: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .ai-input-area {
-        grid-template-columns: 1fr;
+      .support-ai-section::before {
+        position: static;
+        display: inline-block;
+        margin-bottom: 10px;
       }
     }
+"""
 
-  </style>
-</head>
-<body>
-  <div class="topbar">
-    <nav class="nav">
-      <div class="logo">FronteiraFinal Support</div>
-      <div class="nav-links">
-        <a href="#trilhas">Trilhas</a>
-        <a href="#biblioteca">Biblioteca</a>
-        <a href="#duvidas">Suporte</a>
-        <a href="#monetizacao">Monetização</a>
-      </div>
-    </nav>
-  </div>
+html = re.sub(r"<style>.*?</style>", f"<style>\n{novo_css}\n  </style>", html, flags=re.S)
 
-  <header>
-    <section class="hero">
-      <h1>Suporte acadêmico para alunos de <span>programação</span></h1>
-      <p>
-        Uma página de apoio para organizar conteúdos, códigos, dúvidas frequentes e atividades práticas.
-        O objetivo é ajudar o aluno a estudar com autonomia, revisar conceitos e evoluir do básico ao intermediário.
-      </p>
-      <div class="actions">
-        <a class="btn btn-primary" href="#biblioteca">Acessar códigos</a>
-        <a class="btn btn-secondary" href="#monetizacao">Ver planos de apoio</a>
-      </div>
-    </section>
+html = html.replace(
+    "Uma página de apoio para organizar conteúdos, códigos, dúvidas frequentes e atividades práticas.",
+    "Uma plataforma acadêmica com visual tecnológico para organizar conteúdos, códigos, dúvidas frequentes e atividades práticas."
+)
 
-    <aside class="hero-card">
-      <h2>O que o aluno encontra aqui?</h2>
-      <ul class="checklist">
-        <li>Exemplos prontos para copiar, testar e modificar.</li>
-        <li>Explicações acadêmicas com linguagem simples.</li>
-        <li>Trilhas de estudo para HTML, CSS, JavaScript, Python, SQL e Git.</li>
-        <li>Área de suporte para direcionar dúvidas e gerar orientação inicial.</li>
-        <li>Planos opcionais de mentoria, materiais premium e aulas particulares.</li>
-      </ul>
-    </aside>
-  </header>
-
-  <main class="container">
-    <section id="trilhas">
-      <div class="section-title">
-        <h2>Trilhas de aprendizagem</h2>
-        <p>Organização sugerida para o aluno não ficar perdido durante os estudos.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Iniciante</span>
-          <h3>Fundamentos da Web</h3>
-          <p>HTML para estrutura, CSS para aparência e JavaScript para interatividade.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('html')">Ver HTML</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Lógica</span>
-          <h3>Programação com Python</h3>
-          <p>Variáveis, entrada de dados, condições, laços, funções e resolução de problemas.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('python')">Ver Python</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Acadêmico</span>
-          <h3>Banco de Dados e Git</h3>
-          <p>Criação de tabelas, comandos SQL, versionamento, GitHub e boas práticas de entrega.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('git')">Ver Git</button>
-        </article>
-      </div>
-    </section>
-
-    <section id="biblioteca">
-      <div class="section-title">
-        <h2>Biblioteca de códigos</h2>
-        <p>Pesquise por linguagem, aula ou tema. Depois copie o código e teste em aula.</p>
-      </div>
-
-      <div class="search-box">
-        <input type="text" id="pesquisa" placeholder="Pesquisar por aula, linguagem ou tema..." onkeyup="pesquisarCodigos()">
-        <button class="btn btn-primary" onclick="limparPesquisa()">Limpar</button>
-      </div>
-
-      <div class="codigo-lista">
-        <section class="card codigo-card">
-          <span class="tag">HTML</span>
-          <h2>Aula 01 - Estrutura básica de uma página HTML</h2>
-          <p>Este código apresenta a estrutura mínima de uma página web. Ele é a base para qualquer projeto front-end.</p>
-          <pre id="codigo1">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;pt-BR&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;title&gt;Minha primeira página&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Olá, mundo!&lt;/h1&gt;
-  &lt;p&gt;Esta é minha primeira página HTML.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo1')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">CSS</span>
-          <h2>Aula 02 - Estilizando uma página com CSS</h2>
-          <p>O CSS controla aparência, cores, fontes, margens e organização visual dos elementos.</p>
-          <pre id="codigo2">body {
-  background-color: #f4f4f4;
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  color: blue;
-  text-align: center;
-}
-
-p {
-  color: #333;
-  font-size: 18px;
-}</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo2')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">JavaScript</span>
-          <h2>Aula 03 - Mensagens e interação com JavaScript</h2>
-          <p>O JavaScript permite receber dados do usuário e exibir respostas dinâmicas na tela.</p>
-          <pre id="codigo3">alert("Bem-vindo à aula de programação!");
-
-let nome = prompt("Digite seu nome:");
-alert("Olá, " + nome + "! Bons estudos!");</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo3')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Python</span>
-          <h2>Aula 04 - Primeiro código em Python</h2>
-          <p>Exemplo inicial para compreender entrada de dados, variável e saída no terminal.</p>
-          <pre id="codigo4">nome = input("Digite seu nome: ")
-print("Olá,", nome)
-print("Seja bem-vindo à aula de programação!")</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo4')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Banco de Dados SQL</span>
-          <h2>Aula 05 - Criando uma tabela de alunos</h2>
-          <p>Este exemplo cria uma tabela simples, com chave primária e campos básicos de cadastro.</p>
-          <pre id="codigo5">CREATE TABLE alunos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(100) NOT NULL,
-  email VARCHAR(100),
-  turma VARCHAR(50)
-);</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo5')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Git / GitHub</span>
-          <h2>Aula 06 - Versionamento com Trunk-Based Development</h2>
-          <p>Atividade acadêmica sobre integração frequente, branch principal, commits e feature flags.</p>
-          <button class="btn btn-secondary" onclick="mostrarAtividadeVersionamento()">Abrir atividade</button>
-          <div id="atividadeVersionamento" class="oculto" style="margin-top: 18px;">
-            <pre>ATIVIDADE - TRUNK-BASED DEVELOPMENT
-
-Parte 1 - Estratégia de Branches
-No Trunk-Based Development, utilizaremos principalmente a branch main.
-As branches devem ser curtas e durar poucas horas ou no máximo um dia.
-
-Parte 2 - Frequência de Integração
-Ana e Bruno devem fazer commits frequentes durante o dia.
-Ao final do expediente, devem integrar as alterações na branch main.
-
-Parte 3 - Feature Flags
-Nome das flags:
-- habilitarPagamentoPIX
-- habilitarCupomDesconto
-
-Valor padrão: false
-
-Parte 4 - Pseudocódigo
-FUNÇÃO renderizarTelaDePagamento()
-    mostrar título "Tela de Pagamento"
-
-    SE habilitarCupomDesconto for verdadeiro ENTÃO
-        mostrar campo "Cupom de Desconto"
-    SENÃO
-        não mostrar nada
-    FIM SE
-
-    SE habilitarPagamentoPIX for verdadeiro ENTÃO
-        mostrar botão "Pagar com PIX"
-    SENÃO
-        mostrar botão "Pagar com Cartão"
-    FIM SE
-FIM FUNÇÃO.</pre>
-          </div>
-        </section>
-      </div>
-    </section>
-
-    <section id="duvidas">
-      <div class="section-title">
-        <h2>Central de suporte ao aluno</h2>
-        <p>Espaço para o aluno identificar o tipo de dúvida e receber uma orientação inicial de estudo.</p>
-      </div>
-
-      <div class="duvidas">
-        <article class="card">
-          <h3>Descreva sua dificuldade</h3>
-          <p>Selecione o tema e escreva sua dúvida. A página gera uma orientação inicial para ajudar no estudo.</p>
-          <select id="temaDuvida">
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="sql">Banco de Dados / SQL</option>
-            <option value="git">Git / GitHub</option>
-          </select>
-          <br><br>
-          <textarea id="textoDuvida" rows="6" placeholder="Exemplo: não entendi como criar uma tabela no banco de dados..."></textarea>
-          <br><br>
-          <button class="btn btn-primary" onclick="gerarOrientacao()">Gerar orientação</button>
-        </article>
-
-        <article class="card">
-          <h3>Orientação inicial</h3>
-          <div id="respostaSuporte" class="resposta-box">
-            A orientação aparecerá aqui. Use este espaço como apoio inicial e, se necessário, procure o professor para uma explicação mais detalhada.
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="monetizacao">
-      <div class="section-title">
-        <h2>Possível monetização da página</h2>
-        <p>Modelos simples para transformar a página em um projeto sustentável, sem prejudicar o acesso gratuito ao conteúdo básico.</p>
-      </div>
-
-      <div class="planos">
-        <article class="card">
-          <span class="tag">Gratuito</span>
-          <h3>Acesso básico</h3>
-          <p class="price">R$ 0</p>
-          <p>Códigos básicos, atividades introdutórias e pesquisa por conteúdo.</p>
-          <button class="btn btn-secondary">Disponível</button>
-        </article>
-
-        <article class="card destaque">
-          <span class="tag">Premium</span>
-          <h3>Material completo</h3>
-          <p class="price">R$ 19,90/mês</p>
-          <p>Apostilas, exercícios corrigidos, desafios extras, simulados e projetos guiados.</p>
-          <button class="btn btn-primary" onclick="simularCompra('Material completo')">Tenho interesse</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Mentoria</span>
-          <h3>Aula particular</h3>
-          <p class="price">R$ 49,90/aula</p>
-          <p>Suporte individual para dúvidas, projetos, GitHub, banco de dados e programação.</p>
-          <button class="btn btn-primary" onclick="simularCompra('Mentoria individual')">Agendar mentoria</button>
-        </article>
-      </div>
-
-      <p class="small" style="margin-top: 14px;">
-        Observação: os botões de monetização são demonstrativos. Para vender de verdade, você pode integrar futuramente com Hotmart, Eduzz, Kiwify, Mercado Pago, Stripe, Pix ou WhatsApp Business.
-      </p>
-    </section>
-
-    <!-- CENTRAL DE SUPORTE COM IA -->
-    <section class="support-ai-section" id="central-suporte-ia">
-      <div class="support-ai-header">
-        <span class="tag">IA Acadêmica</span>
-        <h2>Central de Suporte ao Aluno com Inteligência Artificial</h2>
-        <p>
-          Tire dúvidas sobre HTML, CSS, JavaScript, Python, Banco de Dados e Git/GitHub.
-          A IA deve ser usada como apoio ao estudo, explicando o raciocínio e orientando o aluno passo a passo.
-        </p>
-      </div>
-
-      <div class="ai-chat-box">
-        <div class="ai-messages" id="aiMessages">
-          <div class="ai-message bot">
-            Olá! Eu sou o assistente acadêmico da FronteiraFinal. Digite sua dúvida de programação.
-          </div>
-        </div>
-
-        <div class="ai-input-area">
-          <textarea id="studentQuestion" placeholder="Exemplo: Explique o que é uma variável em JavaScript..." rows="3"></textarea>
-          <button onclick="enviarPerguntaIA()">Perguntar para a IA</button>
-        </div>
-
-        <p class="ai-note">
-          Observação técnica: por segurança, a chave da API não fica nesta página.
-          O HTML envia a pergunta para o servidor em <strong>/api/suporte-ai</strong>,
-          e o servidor faz a comunicação com a IA.
-        </p>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    FronteiraFinal Support — Página acadêmica de apoio aos estudos de programação.
-  </footer>
-
-  <script>
-    function copiarCodigo(id) {
-      const codigo = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(codigo).then(() => {
-        alert("Código copiado com sucesso!");
-      }).catch(() => {
-        alert("Não foi possível copiar automaticamente. Selecione o código e copie manualmente.");
-      });
-    }
-
-    function mostrarAtividadeVersionamento() {
-      const atividade = document.getElementById("atividadeVersionamento");
-      atividade.classList.toggle("oculto");
-    }
-
-    function pesquisarCodigos() {
-      const termo = document.getElementById("pesquisa").value.toLowerCase();
-      const cards = document.querySelectorAll(".codigo-card");
-
-      cards.forEach(card => {
-        const texto = card.innerText.toLowerCase();
-        card.classList.toggle("oculto", !texto.includes(termo));
-      });
-    }
-
-    function limparPesquisa() {
-      document.getElementById("pesquisa").value = "";
-      pesquisarCodigos();
-    }
-
-    function filtrarRapido(termo) {
-      document.getElementById("pesquisa").value = termo;
-      pesquisarCodigos();
-      document.getElementById("biblioteca").scrollIntoView({ behavior: "smooth" });
-    }
-
-    function gerarOrientacao() {
-      const tema = document.getElementById("temaDuvida").value;
-      const duvida = document.getElementById("textoDuvida").value.trim();
-      const resposta = document.getElementById("respostaSuporte");
-
-      const orientacoes = {
-        html: "Revise a função das tags principais: html, head, body, h1, p, img e a. Em seguida, crie uma página simples com título, parágrafo e link.",
-        css: "Revise seletores, propriedades e valores. Comece alterando cor, fonte, margem, padding e borda de um elemento por vez.",
-        javascript: "Revise variáveis, alert, prompt, condições e funções. Teste pequenos blocos de código antes de montar uma solução maior.",
-        python: "Revise entrada de dados, variáveis, print, if/else e repetição. Use exemplos pequenos e observe cada saída no terminal.",
-        sql: "Revise tabela, campo, tipo de dado, chave primária, INSERT e SELECT. Antes de criar comandos, desenhe quais dados precisam ser armazenados.",
-        git: "Revise git init, git add, git commit, git remote e git push. O ponto principal é entender que o Git salva versões e o GitHub guarda o projeto online."
-      };
-
-      resposta.innerHTML = `<strong>Tema escolhido:</strong> ${tema.toUpperCase()}<br><br>
-        <strong>Sua dúvida:</strong> ${duvida || "Nenhuma dúvida específica foi escrita."}<br><br>
-        <strong>Orientação:</strong> ${orientacoes[tema]}<br><br>
-        <strong>Próximo passo:</strong> tente resolver um exemplo pequeno, copie o erro se aparecer e compare com o código da biblioteca.`;
-    }
-
-    function simularCompra(plano) {
-      alert("Você demonstrou interesse em: " + plano + ". Futuramente este botão pode abrir WhatsApp, Pix, Hotmart ou Mercado Pago.");
-    }
-
-    async function enviarPerguntaIA() {
-      const campo = document.getElementById("studentQuestion");
-      const mensagens = document.getElementById("aiMessages");
-      const pergunta = campo.value.trim();
-
-      if (!pergunta) {
-        alert("Digite uma dúvida antes de enviar.");
-        return;
-      }
-
-      const mensagemAluno = document.createElement("div");
-      mensagemAluno.className = "ai-message user";
-      mensagemAluno.innerText = pergunta;
-      mensagens.appendChild(mensagemAluno);
-
-      campo.value = "";
-
-      const carregando = document.createElement("div");
-      carregando.className = "ai-message bot";
-      carregando.innerText = "Analisando sua dúvida...";
-      mensagens.appendChild(carregando);
-      mensagens.scrollTop = mensagens.scrollHeight;
-
-      try {
-        const resposta = await fetch("/api/suporte-ai", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ pergunta })
-        });
-
-        if (!resposta.ok) {
-          const textoErro = await resposta.text();
-          throw new Error(textoErro || "Erro na comunicação com o servidor.");
-        }
-
-        const dados = await resposta.json();
-        carregando.innerText = dados.resposta || "Não consegui gerar uma resposta agora.";
-      } catch (erro) {
-        console.error("Erro no chat de IA:", erro);
-        carregando.innerText =
-          "Erro ao conectar com a IA: " + erro.message;
-      }
-
-      mensagens.scrollTop = mensagens.scrollHeight;
-    }
-
-  </script>
-</body>
-</html>
+destino = Path("/mnt/data/fronteirafinal_visual_tecnologico.html")
+destino.write_text(html, encoding="utf-8")
+print(f"Arquivo criado: {destino}")
