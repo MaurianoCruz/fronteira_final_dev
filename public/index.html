@@ -829,14 +829,16 @@ FIM FUNÇÃO.</pre>
         });
 
         if (!resposta.ok) {
-          throw new Error("Erro na comunicação com o servidor.");
+          const textoErro = await resposta.text();
+          throw new Error(textoErro || "Erro na comunicação com o servidor.");
         }
 
         const dados = await resposta.json();
         carregando.innerText = dados.resposta || "Não consegui gerar uma resposta agora.";
       } catch (erro) {
+        console.error("Erro no chat de IA:", erro);
         carregando.innerText =
-          "O chat de IA ainda precisa estar conectado ao servidor. Enquanto isso, use esta área como modelo visual para a futura integração.";
+          "Erro ao conectar com a IA: " + erro.message;
       }
 
       mensagens.scrollTop = mensagens.scrollHeight;
