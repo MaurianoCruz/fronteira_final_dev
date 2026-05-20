@@ -1,0 +1,23 @@
+COMO RODAR A CENTRAL DE SUPORTE COM IA
+
+1. Crie uma pasta chamada fronteirafinal-suporte-ia.
+2. Dentro dela, crie uma pasta chamada public.
+3. Coloque o arquivo pagina_fronteirafinal_com_ia.html dentro da pasta public e renomeie para index.html.
+4. Na pasta principal, coloque:
+   - server.js
+   - package.json
+   - .env.example
+
+5. Renomeie .env.example para .env.
+6. Dentro do arquivo .env, coloque sua chave da API:
+   OPENAI_API_KEY=sua_chave_real_aqui
+
+7. No terminal, dentro da pasta principal, execute:
+   npm install
+   npm start
+
+8. Acesse:
+   http://localhost:3000
+
+IMPORTANTE:
+Nunca coloque a chave da API diretamente dentro do HTML.
