@@ -23,7 +23,7 @@ app.post("/api/suporte-ai", async (req, res) => {
     }
 
     const resposta = await client.responses.create({
-      model: "gpt-5.1-mini",
+      model: "gpt-4.1-mini",
       instructions: `
 Você é um tutor acadêmico da plataforma FronteiraFinal.
 Explique programação para alunos iniciantes de forma didática.
