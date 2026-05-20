@@ -3,942 +3,717 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FronteiraFinal Support - Suporte Acadêmico de Programação</title>
-
+  <title>FronteiraFinal Academy | Suporte Inteligente para Estudantes de TI</title>
+  
   <style>
-
-    :root {
-      --bg: #020617;
-      --panel: rgba(15, 23, 42, 0.82);
-      --primary: #38bdf8;
-      --secondary: #8b5cf6;
-      --success: #22c55e;
-      --warning: #facc15;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
-      --border: rgba(148, 163, 184, 0.22);
-      --glow-blue: 0 0 28px rgba(56, 189, 248, 0.32);
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-    }
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.22), transparent 28%),
-        radial-gradient(circle at 85% 12%, rgba(139, 92, 246, 0.22), transparent 26%),
-        linear-gradient(135deg, #020617 0%, #07111f 48%, #0f172a 100%);
-      overflow-x: hidden;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--darker);
+      color: var(--light);
+      line-height: 1.6;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.12;
-      background-image:
-        linear-gradient(rgba(56, 189, 248, 0.25) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 189, 248, 0.25) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, black, transparent 82%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .topbar {
+    /* Header com progresso */
+    .header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: rgba(2, 6, 23, 0.78);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      z-index: 100;
     }
 
-    .nav {
-      max-width: 1180px;
+    .nav-container {
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 16px 20px;
+      padding: 1rem 2rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .logo {
-      font-weight: 900;
-      letter-spacing: 0.7px;
-      color: white;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo::before {
-      content: "";
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 16px var(--primary), 0 0 28px var(--secondary);
-    }
-
-    .logo::after {
-      content: "ONLINE";
-      font-size: 0.62rem;
-      color: #67e8f9;
-      border: 1px solid rgba(103, 232, 249, 0.35);
-      padding: 3px 7px;
-      border-radius: 999px;
-      background: rgba(8, 47, 73, 0.35);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .nav-links a {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      transition: 0.25s;
-    }
-
-    .nav-links a:hover {
-      color: white;
-      border-color: rgba(56, 189, 248, 0.32);
-      background: rgba(56, 189, 248, 0.08);
-      box-shadow: var(--glow-blue);
-    }
-
-    header {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 86px 20px 42px;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 28px;
-      align-items: center;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.3rem, 5vw, 4.8rem);
-      line-height: 1.02;
-      margin-bottom: 20px;
-      letter-spacing: -1.6px;
-    }
-
-    .hero h1 span {
-      color: transparent;
-      background: linear-gradient(90deg, #38bdf8, #a78bfa, #22c55e);
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: var(--gradient);
       -webkit-background-clip: text;
       background-clip: text;
-      filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.28));
+      color: transparent;
     }
 
-    .hero p {
-      color: #cbd5e1;
-      line-height: 1.8;
-      font-size: 1.08rem;
-      max-width: 720px;
-      margin-bottom: 26px;
+    .progress-bar-container {
+      flex: 1;
+      max-width: 300px;
+      background: var(--dark);
+      border-radius: 1rem;
+      padding: 0.25rem;
     }
 
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+    .progress-bar {
+      height: 8px;
+      background: var(--gradient);
+      border-radius: 1rem;
+      transition: width 0.3s ease;
+      width: 0%;
     }
 
-    .btn, button {
-      border: none;
-      padding: 13px 18px;
-      border-radius: 999px;
+    .xp-display {
+      background: var(--gradient);
+      padding: 0.25rem 1rem;
+      border-radius: 2rem;
+      font-weight: bold;
+      font-size: 0.875rem;
+    }
+
+    /* Layout principal */
+    .main-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      height: fit-content;
+      position: sticky;
+      top: 80px;
+    }
+
+    .sidebar h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .roadmap-item {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
       cursor: pointer;
-      font-weight: 800;
-      transition: 0.25s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      letter-spacing: 0.2px;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #22d3ee, #38bdf8, #8b5cf6);
-      color: #020617;
-      box-shadow: 0 0 24px rgba(56, 189, 248, 0.35);
+    .roadmap-item.completed {
+      border-left-color: var(--success);
+      opacity: 0.7;
     }
 
-    .btn-secondary {
-      background: rgba(15, 23, 42, 0.75);
-      color: white;
-      border: 1px solid rgba(148, 163, 184, 0.28);
+    .roadmap-item:hover {
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateX(5px);
     }
 
-    .btn:hover, button:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.08);
-      box-shadow: var(--glow-blue);
-    }
-
-    .hero-card, .card, .support-ai-section {
-      background:
-        linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(17, 24, 39, 0.92)),
-        radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 44%);
-      border: 1px solid rgba(56, 189, 248, 0.24);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .hero-card {
-      border-radius: 30px;
-      padding: 28px;
-      overflow: hidden;
-    }
-
-    .hero-card h2 {
-      margin-bottom: 16px;
-      color: white;
-    }
-
-    .checklist {
-      list-style: none;
-      display: grid;
-      gap: 13px;
-      color: #dbeafe;
-      line-height: 1.55;
-    }
-
-    .checklist li {
-      background: rgba(2, 6, 23, 0.26);
-      border: 1px solid rgba(148, 163, 184, 0.13);
-      border-radius: 14px;
-      padding: 10px 12px;
-    }
-
-    .checklist li::before {
-      content: "▸";
-      color: var(--primary);
-      font-weight: 900;
-      margin-right: 8px;
-      text-shadow: 0 0 10px var(--primary);
-    }
-
-    .container {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 26px 20px 70px;
-      position: relative;
-    }
-
-    .section-title {
-      margin: 36px 0 18px;
-    }
-
-    .section-title h2 {
-      font-size: 2.1rem;
-      margin-bottom: 8px;
-      color: white;
-    }
-
-    .section-title h2::before {
-      content: "◆";
-      color: var(--primary);
-      margin-right: 10px;
-      font-size: 1rem;
-      vertical-align: middle;
-      text-shadow: 0 0 14px var(--primary);
-    }
-
-    .section-title p {
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .grid, .planos {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      border-radius: 24px;
-      padding: 23px;
-      position: relative;
-      overflow: hidden;
-      transition: 0.25s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(56, 189, 248, 0.48);
-      box-shadow: var(--shadow), var(--glow-blue);
-    }
-
-    .card h3, .card h2 {
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      line-height: 1.65;
-      color: #cbd5e1;
-      margin-bottom: 14px;
-    }
-
-    .tag {
+    .badge {
       display: inline-block;
-      background: rgba(56, 189, 248, 0.12);
-      color: #7dd3fc;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 900;
-      margin-bottom: 12px;
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
     }
 
-    .search-box {
-      margin: 20px 0;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-    }
-
-    .search-box input, textarea, select {
-      width: 100%;
-      padding: 15px;
-      border-radius: 16px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      outline: none;
-      font-size: 1rem;
-      background: rgba(2, 6, 23, 0.72);
+    .badge-done {
+      background: var(--success);
       color: white;
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.24);
     }
 
-    .search-box input:focus, textarea:focus, select:focus {
-      border-color: rgba(56, 189, 248, 0.65);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    /* Conteúdo principal */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
     }
 
-    .codigo-lista {
-      display: grid;
-      gap: 20px;
-    }
-
-    pre {
-      background: linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(7, 17, 31, 0.96));
-      color: #86efac;
-      padding: 20px;
-      border-radius: 16px;
-      overflow-x: auto;
-      font-size: 0.93rem;
-      margin-bottom: 15px;
-      border: 1px solid rgba(34, 197, 94, 0.20);
-      box-shadow: inset 0 0 28px rgba(34, 197, 94, 0.05);
-    }
-
-    .duvidas {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 18px;
-    }
-
-    .resposta-box {
-      background: rgba(2, 6, 23, 0.72);
-      border: 1px dashed rgba(56, 189, 248, 0.55);
-      border-radius: 18px;
-      padding: 18px;
-      min-height: 170px;
-      color: #dbeafe;
-      line-height: 1.7;
-    }
-
-    .price {
-      font-size: 2rem;
-      font-weight: 900;
-      color: var(--warning);
-      margin: 12px 0;
-      text-shadow: 0 0 18px rgba(250, 204, 21, 0.24);
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .destaque {
-      border-color: rgba(250, 204, 21, 0.6);
-      transform: scale(1.02);
-    }
-
-    .oculto {
-      display: none !important;
-    }
-
-    .support-ai-section {
-      border-radius: 26px;
-      padding: 30px;
-      margin: 42px 0;
-      position: relative;
+    /* Chat com IA */
+    .chat-section {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(99, 102, 241, 0.2);
       overflow: hidden;
     }
 
-    .support-ai-section::before {
-      content: "AI CORE ACTIVE";
-      position: absolute;
-      top: 18px;
-      right: 22px;
-      font-size: 0.68rem;
-      letter-spacing: 1.4px;
-      color: rgba(125, 211, 252, 0.72);
+    .chat-header {
+      background: var(--gradient);
+      padding: 1rem 1.5rem;
+      color: white;
     }
 
-    .support-ai-header h2 {
-      color: #7dd3fc;
-      margin: 10px 0;
-      font-size: 1.9rem;
-      text-shadow: 0 0 18px rgba(56, 189, 248, 0.22);
-    }
-
-    .support-ai-header p {
-      color: #cbd5e1;
-      line-height: 1.75;
-      margin-bottom: 20px;
-    }
-
-    .ai-chat-box {
-      background: rgba(2, 6, 23, 0.78);
-      border: 1px solid rgba(30, 41, 59, 0.92);
-      border-radius: 20px;
-      padding: 18px;
-    }
-
-    .ai-messages {
-      min-height: 190px;
-      max-height: 370px;
+    .chat-messages {
+      height: 400px;
       overflow-y: auto;
-      padding: 12px;
-      margin-bottom: 15px;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(2, 6, 23, 0.84));
-      border-radius: 16px;
-      border: 1px solid rgba(56, 189, 248, 0.15);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .ai-message {
-      padding: 13px 15px;
-      border-radius: 15px;
-      margin-bottom: 10px;
-      line-height: 1.65;
-      white-space: pre-wrap;
+    .message {
+      display: flex;
+      gap: 1rem;
+      animation: slideIn 0.3s ease;
     }
 
-    .ai-message.bot {
-      background: rgba(15, 23, 42, 0.92);
-      color: #e5e7eb;
-      border-left: 4px solid #38bdf8;
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .ai-message.user {
-      background: rgba(5, 46, 22, 0.9);
-      color: #dcfce7;
-      border-left: 4px solid #22c55e;
+    .message.user {
+      justify-content: flex-end;
     }
 
-    .ai-input-area {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: stretch;
+    .message-content {
+      max-width: 70%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
     }
 
-    .ai-input-area button {
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-      color: #020617;
-      box-shadow: 0 0 22px rgba(56, 189, 248, 0.28);
+    .message.bot .message-content {
+      background: var(--dark);
+      border-left: 3px solid var(--primary);
     }
 
-    .ai-note {
-      color: #94a3b8;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-top: 12px;
+    .message.user .message-content {
+      background: var(--gradient);
+      color: white;
     }
 
-    footer {
-      text-align: center;
-      padding: 34px 20px;
-      color: #94a3b8;
-      border-top: 1px solid rgba(56, 189, 248, 0.18);
-      background: rgba(2, 6, 23, 0.82);
+    .chat-input-area {
+      padding: 1rem;
+      border-top: 1px solid rgba(99, 102, 241, 0.2);
+      display: flex;
+      gap: 1rem;
     }
 
-    @media (max-width: 850px) {
-      header, .duvidas {
+    .chat-input-area textarea {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--dark);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 0.5rem;
+      color: white;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .chat-input-area button {
+      padding: 0 1.5rem;
+      background: var(--gradient);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .chat-input-area button:hover {
+      transform: scale(1.05);
+    }
+
+    /* Desafios interativos */
+    .challenges-section {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 1.5rem;
+    }
+
+    .challenge {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .challenge pre {
+      background: var(--darker);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .challenge input {
+      width: 100%;
+      padding: 0.5rem;
+      background: var(--dark);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 0.5rem;
+      color: white;
+      margin: 0.5rem 0;
+    }
+
+    .challenge button {
+      padding: 0.5rem 1rem;
+      background: var(--primary);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .feedback {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .feedback.correct {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .feedback.incorrect {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    /* Dicas de mercado */
+    .tips-section {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .tip-card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .main-container {
         grid-template-columns: 1fr;
       }
-
-      .grid, .planos {
-        grid-template-columns: 1fr;
-      }
-
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .search-box, .ai-input-area {
-        grid-template-columns: 1fr;
-      }
-
-      .support-ai-section::before {
+      
+      .sidebar {
         position: static;
-        display: inline-block;
-        margin-bottom: 10px;
+      }
+      
+      .message-content {
+        max-width: 85%;
       }
     }
-
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <nav class="nav">
-      <div class="logo">FronteiraFinal Support</div>
-      <div class="nav-links">
-        <a href="#trilhas">Trilhas</a>
-        <a href="#biblioteca">Biblioteca</a>
-        <a href="#duvidas">Suporte</a>
-        <a href="#monetizacao">Monetização</a>
+  <div class="header">
+    <div class="nav-container">
+      <div class="logo">🚀 FronteiraFinal Academy</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
       </div>
-    </nav>
+      <div class="xp-display">
+        ⭐ Nível <span id="level">1</span> | 🎯 <span id="xp">0</span> XP
+      </div>
+    </div>
   </div>
 
-  <header>
-    <section class="hero">
-      <h1>Suporte acadêmico para alunos de <span>programação</span></h1>
-      <p>
-        Uma plataforma acadêmica com visual tecnológico para organizar conteúdos, códigos, dúvidas frequentes e atividades práticas.
-        O objetivo é ajudar o aluno a estudar com autonomia, revisar conceitos e evoluir do básico ao intermediário.
-      </p>
-      <div class="actions">
-        <a class="btn btn-primary" href="#biblioteca">Acessar códigos</a>
-        <a class="btn btn-secondary" href="#monetizacao">Ver planos de apoio</a>
+  <div class="main-container">
+    <!-- Sidebar com Roadmap -->
+    <aside class="sidebar">
+      <h3>📚 Sua Jornada</h3>
+      <div id="roadmap">
+        <!-- Roadmap será inserido via JS -->
       </div>
-    </section>
-
-    <aside class="hero-card">
-      <h2>O que o aluno encontra aqui?</h2>
-      <ul class="checklist">
-        <li>Exemplos prontos para copiar, testar e modificar.</li>
-        <li>Explicações acadêmicas com linguagem simples.</li>
-        <li>Trilhas de estudo para HTML, CSS, JavaScript, Python, SQL e Git.</li>
-        <li>Área de suporte para direcionar dúvidas e gerar orientação inicial.</li>
-        <li>Planos opcionais de mentoria, materiais premium e aulas particulares.</li>
-      </ul>
+      
+      <hr style="margin: 1rem 0; border-color: rgba(99, 102, 241, 0.2);">
+      
+      <h3>🏆 Conquistas</h3>
+      <div id="achievements">
+        <!-- Conquistas serão inseridas via JS -->
+      </div>
     </aside>
-  </header>
 
-  <main class="container">
-    <section id="trilhas">
-      <div class="section-title">
-        <h2>Trilhas de aprendizagem</h2>
-        <p>Organização sugerida para o aluno não ficar perdido durante os estudos.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Iniciante</span>
-          <h3>Fundamentos da Web</h3>
-          <p>HTML para estrutura, CSS para aparência e JavaScript para interatividade.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('html')">Ver HTML</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Lógica</span>
-          <h3>Programação com Python</h3>
-          <p>Variáveis, entrada de dados, condições, laços, funções e resolução de problemas.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('python')">Ver Python</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Acadêmico</span>
-          <h3>Banco de Dados e Git</h3>
-          <p>Criação de tabelas, comandos SQL, versionamento, GitHub e boas práticas de entrega.</p>
-          <button class="btn btn-secondary" onclick="filtrarRapido('git')">Ver Git</button>
-        </article>
-      </div>
-    </section>
-
-    <section id="biblioteca">
-      <div class="section-title">
-        <h2>Biblioteca de códigos</h2>
-        <p>Pesquise por linguagem, aula ou tema. Depois copie o código e teste em aula.</p>
-      </div>
-
-      <div class="search-box">
-        <input type="text" id="pesquisa" placeholder="Pesquisar por aula, linguagem ou tema..." onkeyup="pesquisarCodigos()">
-        <button class="btn btn-primary" onclick="limparPesquisa()">Limpar</button>
-      </div>
-
-      <div class="codigo-lista">
-        <section class="card codigo-card">
-          <span class="tag">HTML</span>
-          <h2>Aula 01 - Estrutura básica de uma página HTML</h2>
-          <p>Este código apresenta a estrutura mínima de uma página web. Ele é a base para qualquer projeto front-end.</p>
-          <pre id="codigo1">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;pt-BR&quot;&gt;
-&lt;head&gt;
-  &lt;meta charset=&quot;UTF-8&quot;&gt;
-  &lt;title&gt;Minha primeira página&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Olá, mundo!&lt;/h1&gt;
-  &lt;p&gt;Esta é minha primeira página HTML.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo1')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">CSS</span>
-          <h2>Aula 02 - Estilizando uma página com CSS</h2>
-          <p>O CSS controla aparência, cores, fontes, margens e organização visual dos elementos.</p>
-          <pre id="codigo2">body {
-  background-color: #f4f4f4;
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  color: blue;
-  text-align: center;
-}
-
-p {
-  color: #333;
-  font-size: 18px;
-}</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo2')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">JavaScript</span>
-          <h2>Aula 03 - Mensagens e interação com JavaScript</h2>
-          <p>O JavaScript permite receber dados do usuário e exibir respostas dinâmicas na tela.</p>
-          <pre id="codigo3">alert("Bem-vindo à aula de programação!");
-
-let nome = prompt("Digite seu nome:");
-alert("Olá, " + nome + "! Bons estudos!");</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo3')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Python</span>
-          <h2>Aula 04 - Primeiro código em Python</h2>
-          <p>Exemplo inicial para compreender entrada de dados, variável e saída no terminal.</p>
-          <pre id="codigo4">nome = input("Digite seu nome: ")
-print("Olá,", nome)
-print("Seja bem-vindo à aula de programação!")</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo4')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Banco de Dados SQL</span>
-          <h2>Aula 05 - Criando uma tabela de alunos</h2>
-          <p>Este exemplo cria uma tabela simples, com chave primária e campos básicos de cadastro.</p>
-          <pre id="codigo5">CREATE TABLE alunos (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(100) NOT NULL,
-  email VARCHAR(100),
-  turma VARCHAR(50)
-);</pre>
-          <button class="btn btn-primary" onclick="copiarCodigo('codigo5')">Copiar código</button>
-        </section>
-
-        <section class="card codigo-card">
-          <span class="tag">Git / GitHub</span>
-          <h2>Aula 06 - Versionamento com Trunk-Based Development</h2>
-          <p>Atividade acadêmica sobre integração frequente, branch principal, commits e feature flags.</p>
-          <button class="btn btn-secondary" onclick="mostrarAtividadeVersionamento()">Abrir atividade</button>
-          <div id="atividadeVersionamento" class="oculto" style="margin-top: 18px;">
-            <pre>ATIVIDADE - TRUNK-BASED DEVELOPMENT
-
-Parte 1 - Estratégia de Branches
-No Trunk-Based Development, utilizaremos principalmente a branch main.
-As branches devem ser curtas e durar poucas horas ou no máximo um dia.
-
-Parte 2 - Frequência de Integração
-Ana e Bruno devem fazer commits frequentes durante o dia.
-Ao final do expediente, devem integrar as alterações na branch main.
-
-Parte 3 - Feature Flags
-Nome das flags:
-- habilitarPagamentoPIX
-- habilitarCupomDesconto
-
-Valor padrão: false
-
-Parte 4 - Pseudocódigo
-FUNÇÃO renderizarTelaDePagamento()
-    mostrar título "Tela de Pagamento"
-
-    SE habilitarCupomDesconto for verdadeiro ENTÃO
-        mostrar campo "Cupom de Desconto"
-    SENÃO
-        não mostrar nada
-    FIM SE
-
-    SE habilitarPagamentoPIX for verdadeiro ENTÃO
-        mostrar botão "Pagar com PIX"
-    SENÃO
-        mostrar botão "Pagar com Cartão"
-    FIM SE
-FIM FUNÇÃO.</pre>
-          </div>
-        </section>
-      </div>
-    </section>
-
-    <section id="duvidas">
-      <div class="section-title">
-        <h2>Central de suporte ao aluno</h2>
-        <p>Espaço para o aluno identificar o tipo de dúvida e receber uma orientação inicial de estudo.</p>
-      </div>
-
-      <div class="duvidas">
-        <article class="card">
-          <h3>Descreva sua dificuldade</h3>
-          <p>Selecione o tema e escreva sua dúvida. A página gera uma orientação inicial para ajudar no estudo.</p>
-          <select id="temaDuvida">
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="sql">Banco de Dados / SQL</option>
-            <option value="git">Git / GitHub</option>
-          </select>
-          <br><br>
-          <textarea id="textoDuvida" rows="6" placeholder="Exemplo: não entendi como criar uma tabela no banco de dados..."></textarea>
-          <br><br>
-          <button class="btn btn-primary" onclick="gerarOrientacao()">Gerar orientação</button>
-        </article>
-
-        <article class="card">
-          <h3>Orientação inicial</h3>
-          <div id="respostaSuporte" class="resposta-box">
-            A orientação aparecerá aqui. Use este espaço como apoio inicial e, se necessário, procure o professor para uma explicação mais detalhada.
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="monetizacao">
-      <div class="section-title">
-        <h2>Possível monetização da página</h2>
-        <p>Modelos simples para transformar a página em um projeto sustentável, sem prejudicar o acesso gratuito ao conteúdo básico.</p>
-      </div>
-
-      <div class="planos">
-        <article class="card">
-          <span class="tag">Gratuito</span>
-          <h3>Acesso básico</h3>
-          <p class="price">R$ 0</p>
-          <p>Códigos básicos, atividades introdutórias e pesquisa por conteúdo.</p>
-          <button class="btn btn-secondary">Disponível</button>
-        </article>
-
-        <article class="card destaque">
-          <span class="tag">Premium</span>
-          <h3>Material completo</h3>
-          <p class="price">R$ 19,90/mês</p>
-          <p>Apostilas, exercícios corrigidos, desafios extras, simulados e projetos guiados.</p>
-          <button class="btn btn-primary" onclick="simularCompra('Material completo')">Tenho interesse</button>
-        </article>
-
-        <article class="card">
-          <span class="tag">Mentoria</span>
-          <h3>Aula particular</h3>
-          <p class="price">R$ 49,90/aula</p>
-          <p>Suporte individual para dúvidas, projetos, GitHub, banco de dados e programação.</p>
-          <button class="btn btn-primary" onclick="simularCompra('Mentoria individual')">Agendar mentoria</button>
-        </article>
-      </div>
-
-      <p class="small" style="margin-top: 14px;">
-        Observação: os botões de monetização são demonstrativos. Para vender de verdade, você pode integrar futuramente com Hotmart, Eduzz, Kiwify, Mercado Pago, Stripe, Pix ou WhatsApp Business.
-      </p>
-    </section>
-
-    <!-- CENTRAL DE SUPORTE COM IA -->
-    <section class="support-ai-section" id="central-suporte-ia">
-      <div class="support-ai-header">
-        <span class="tag">IA Acadêmica</span>
-        <h2>Central de Suporte ao Aluno com Inteligência Artificial</h2>
-        <p>
-          Tire dúvidas sobre HTML, CSS, JavaScript, Python, Banco de Dados e Git/GitHub.
-          A IA deve ser usada como apoio ao estudo, explicando o raciocínio e orientando o aluno passo a passo.
-        </p>
-      </div>
-
-      <div class="ai-chat-box">
-        <div class="ai-messages" id="aiMessages">
-          <div class="ai-message bot">
-            Olá! Eu sou o assistente acadêmico da FronteiraFinal. Digite sua dúvida de programação.
+    <!-- Conteúdo principal -->
+    <div class="content">
+      <!-- Chat com IA -->
+      <div class="chat-section">
+        <div class="chat-header">
+          <h2>🤖 Tutor IA - FronteiraFinal</h2>
+          <p>Pergunte sobre qualquer tópico de TI. Eu sou seu mentor pessoal!</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            <div class="message-content">
+              👋 Olá, futuro profissional de TI! Sou seu tutor acadêmico.<br><br>
+              Posso ajudar com:
+              <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                <li>💻 Dúvidas de programação</li>
+                <li>📖 Explicações de conceitos</li>
+                <li>🎯 Preparação para entrevistas</li>
+                <li>🚀 Dicas de carreira</li>
+                <li>🐛 Debugging e boas práticas</li>
+              </ul>
+              <br>
+              <strong>Como posso te ajudar hoje?</strong>
+            </div>
           </div>
         </div>
-
-        <div class="ai-input-area">
-          <textarea id="studentQuestion" placeholder="Exemplo: Explique o que é uma variável em JavaScript..." rows="3"></textarea>
-          <button onclick="enviarPerguntaIA()">Perguntar para a IA</button>
+        
+        <div class="chat-input-area">
+          <textarea id="questionInput" placeholder="Ex: Como funciona o hoisting em JavaScript? Explique com exemplos..." rows="2"></textarea>
+          <button onclick="askAI()">Enviar 📤</button>
         </div>
-
-        <p class="ai-note">
-          Observação técnica: por segurança, a chave da API não fica nesta página.
-          O HTML envia a pergunta para o servidor em <strong>/api/suporte-ai</strong>,
-          e o servidor faz a comunicação com a IA.
-        </p>
       </div>
-    </section>
 
-  </main>
+      <!-- Desafios interativos -->
+      <div class="challenges-section">
+        <h2>🎯 Desafio do Dia</h2>
+        <div id="dailyChallenge">
+          <!-- Desafio diário via JS -->
+        </div>
+      </div>
 
-  <footer>
-    FronteiraFinal Support — Página acadêmica de apoio aos estudos de programação.
-  </footer>
+      <!-- Dicas de mercado -->
+      <div class="tips-section">
+        <h2>💼 Dica de Carreira</h2>
+        <div id="careerTip">
+          <!-- Dica via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    function copiarCodigo(id) {
-      const codigo = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(codigo).then(() => {
-        alert("Código copiado com sucesso!");
-      }).catch(() => {
-        alert("Não foi possível copiar automaticamente. Selecione o código e copie manualmente.");
-      });
-    }
+    // ========== SISTEMA DE PROGRESSO ==========
+    let studentData = {
+      xp: 0,
+      level: 1,
+      completedRoadmap: [],
+      achievements: []
+    };
 
-    function mostrarAtividadeVersionamento() {
-      const atividade = document.getElementById("atividadeVersionamento");
-      atividade.classList.toggle("oculto");
-    }
-
-    function pesquisarCodigos() {
-      const termo = document.getElementById("pesquisa").value.toLowerCase();
-      const cards = document.querySelectorAll(".codigo-card");
-
-      cards.forEach(card => {
-        const texto = card.innerText.toLowerCase();
-        card.classList.toggle("oculto", !texto.includes(termo));
-      });
-    }
-
-    function limparPesquisa() {
-      document.getElementById("pesquisa").value = "";
-      pesquisarCodigos();
-    }
-
-    function filtrarRapido(termo) {
-      document.getElementById("pesquisa").value = termo;
-      pesquisarCodigos();
-      document.getElementById("biblioteca").scrollIntoView({ behavior: "smooth" });
-    }
-
-    function gerarOrientacao() {
-      const tema = document.getElementById("temaDuvida").value;
-      const duvida = document.getElementById("textoDuvida").value.trim();
-      const resposta = document.getElementById("respostaSuporte");
-
-      const orientacoes = {
-        html: "Revise a função das tags principais: html, head, body, h1, p, img e a. Em seguida, crie uma página simples com título, parágrafo e link.",
-        css: "Revise seletores, propriedades e valores. Comece alterando cor, fonte, margem, padding e borda de um elemento por vez.",
-        javascript: "Revise variáveis, alert, prompt, condições e funções. Teste pequenos blocos de código antes de montar uma solução maior.",
-        python: "Revise entrada de dados, variáveis, print, if/else e repetição. Use exemplos pequenos e observe cada saída no terminal.",
-        sql: "Revise tabela, campo, tipo de dado, chave primária, INSERT e SELECT. Antes de criar comandos, desenhe quais dados precisam ser armazenados.",
-        git: "Revise git init, git add, git commit, git remote e git push. O ponto principal é entender que o Git salva versões e o GitHub guarda o projeto online."
-      };
-
-      resposta.innerHTML = `<strong>Tema escolhido:</strong> ${tema.toUpperCase()}<br><br>
-        <strong>Sua dúvida:</strong> ${duvida || "Nenhuma dúvida específica foi escrita."}<br><br>
-        <strong>Orientação:</strong> ${orientacoes[tema]}<br><br>
-        <strong>Próximo passo:</strong> tente resolver um exemplo pequeno, copie o erro se aparecer e compare com o código da biblioteca.`;
-    }
-
-    function simularCompra(plano) {
-      alert("Você demonstrou interesse em: " + plano + ". Futuramente este botão pode abrir WhatsApp, Pix, Hotmart ou Mercado Pago.");
-    }
-
-    async function enviarPerguntaIA() {
-      const campo = document.getElementById("studentQuestion");
-      const mensagens = document.getElementById("aiMessages");
-      const pergunta = campo.value.trim();
-
-      if (!pergunta) {
-        alert("Digite uma dúvida antes de enviar.");
-        return;
+    // Carregar dados salvos
+    function loadProgress() {
+      const saved = localStorage.getItem('fronteirafinal_progress');
+      if (saved) {
+        studentData = JSON.parse(saved);
       }
+      updateUI();
+    }
 
-      const mensagemAluno = document.createElement("div");
-      mensagemAluno.className = "ai-message user";
-      mensagemAluno.innerText = pergunta;
-      mensagens.appendChild(mensagemAluno);
+    // Salvar progresso
+    function saveProgress() {
+      localStorage.setItem('fronteirafinal_progress', JSON.stringify(studentData));
+    }
 
-      campo.value = "";
+    // Adicionar XP
+    function addXP(amount) {
+      studentData.xp += amount;
+      const newLevel = Math.floor(studentData.xp / 100) + 1;
+      if (newLevel > studentData.level) {
+        studentData.level = newLevel;
+        showNotification(`🎉 Parabéns! Você alcançou o nível ${newLevel}!`, 'success');
+      }
+      saveProgress();
+      updateUI();
+    }
 
-      const carregando = document.createElement("div");
-      carregando.className = "ai-message bot";
-      carregando.innerText = "Analisando sua dúvida...";
-      mensagens.appendChild(carregando);
-      mensagens.scrollTop = mensagens.scrollHeight;
+    // Completar item do roadmap
+    function completeRoadmap(itemId) {
+      if (!studentData.completedRoadmap.includes(itemId)) {
+        studentData.completedRoadmap.push(itemId);
+        addXP(50);
+        showNotification(`✅ Conquista desbloqueada: ${itemId}! +50 XP`, 'success');
+        saveProgress();
+        updateUI();
+      }
+    }
 
+    // ========== ROADMAP DE CARREIRA ==========
+    const roadmapItems = [
+      { id: "html_basico", title: "HTML5 Semântico", desc: "Estrutura correta de páginas web" },
+      { id: "css_moderno", title: "CSS Flexbox/Grid", desc: "Layouts responsivos modernos" },
+      { id: "js_essentials", title: "JavaScript ES6+", desc: "Fundamentos e programação assíncrona" },
+      { id: "git_github", title: "Git e GitHub", desc: "Versionamento e colaboração" },
+      { id: "python_basics", title: "Python para Dados", desc: "Lógica e estruturas" },
+      { id: "sql_database", title: "SQL e Modelagem", desc: "Consultas e otimização" }
+    ];
+
+    // ========== DESAFIOS ==========
+    const challenges = [
+      {
+        title: "🔧 Corrija o código",
+        description: "O código abaixo deveria somar dois números, mas está dando erro:",
+        code: `function somar(a, b) {\n  return a + b;\n}\n\nconsole.log(somar("5", 10)); // Queremos 15, mas retorna "510"`,
+        question: "O que está causando esse problema? Como corrigir?",
+        answer: "type coercion",
+        hint: "Um dos parâmetros está como string",
+        xpReward: 30
+      },
+      {
+        title: "💡 Complete o código",
+        description: "Preencha a função para inverter uma string:",
+        code: `function inverterString(str) {\n  // Seu código aqui\n  \n  return resultado;\n}`,
+        question: "Escreva o código para inverter a string:",
+        answer: "return str.split('').reverse().join('');",
+        hint: "Use split, reverse e join",
+        xpReward: 40
+      }
+    ];
+
+    let currentChallengeIndex = 0;
+
+    function loadDailyChallenge() {
+      const challenge = challenges[currentChallengeIndex % challenges.length];
+      const container = document.getElementById('dailyChallenge');
+      
+      container.innerHTML = `
+        <div class="challenge">
+          <h3>${challenge.title}</h3>
+          <p>${challenge.description}</p>
+          <pre>${challenge.code}</pre>
+          <p><strong>${challenge.question}</strong></p>
+          <input type="text" id="challengeAnswer" placeholder="Digite sua resposta..." />
+          <button onclick="checkChallenge()">Verificar Resposta ✓</button>
+          <div id="challengeFeedback"></div>
+          <small style="color: #64748b; display: block; margin-top: 0.5rem;">
+            💡 Dica: ${challenge.hint}
+          </small>
+        </div>
+      `;
+    }
+
+    function checkChallenge() {
+      const answer = document.getElementById('challengeAnswer').value.toLowerCase().trim();
+      const challenge = challenges[currentChallengeIndex % challenges.length];
+      const feedback = document.getElementById('challengeFeedback');
+      
+      if (answer.includes(challenge.answer.toLowerCase())) {
+        feedback.innerHTML = `<div class="feedback correct">✅ Correto! +${challenge.xpReward} XP</div>`;
+        addXP(challenge.xpReward);
+        currentChallengeIndex++;
+        setTimeout(() => loadDailyChallenge(), 2000);
+      } else {
+        feedback.innerHTML = `<div class="feedback incorrect">❌ Não é bem isso. Tente novamente! Dica: ${challenge.hint}</div>`;
+      }
+    }
+
+    // ========== DICAS DE MERCADO ==========
+    const careerTips = [
+      "💡 70% das contratações em TI avaliam soft skills tanto quanto habilidades técnicas. Desenvolva comunicação!",
+      "🚀 Construa um portfólio no GitHub desde o início do curso. É seu currículo prático!",
+      "🎯 Prepare-se para entrevistas técnicas com plataformas como LeetCode e HackerRank.",
+      "📚 Aprenda inglês técnico - a documentação e comunidades melhores estão em inglês.",
+      "🤝 Participe de comunidades (Discord, Slack, Meetups) - networking abre portas!",
+      "⚡ Domine Git/GitHub - é a ferramenta mais usada em empresas de tecnologia.",
+      "🔍 Especialize-se em uma stack (ex: React+Node ou Python+Django), mas entenda os fundamentos.",
+      "📝 Documente seu aprendizado - blog, LinkedIn ou vídeos no YouTube aumentam sua visibilidade."
+    ];
+
+    let currentTipIndex = 0;
+
+    function updateCareerTip() {
+      const container = document.getElementById('careerTip');
+      container.innerHTML = `
+        <div class="tip-card">
+          ${careerTips[currentTipIndex % careerTips.length]}
+          <br><br>
+          <button onclick="nextTip()" style="padding: 0.5rem 1rem; background: var(--primary); border: none; border-radius: 0.5rem; color: white; cursor: pointer;">
+            Próxima dica →
+          </button>
+        </div>
+      `;
+    }
+
+    function nextTip() {
+      currentTipIndex++;
+      updateCareerTip();
+    }
+
+    // ========== CHAT COM IA ==========
+    let chatHistory = [];
+
+    async function askAI() {
+      const questionInput = document.getElementById('questionInput');
+      const question = questionInput.value.trim();
+      
+      if (!question) return;
+      
+      // Adicionar mensagem do usuário no chat
+      addMessageToChat(question, 'user');
+      questionInput.value = '';
+      
+      // Mostrar loading
+      const loadingId = addLoadingMessage();
+      
       try {
-        const resposta = await fetch("/api/suporte-ai", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ pergunta })
+        const response = await fetch('/api/suporte-ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pergunta: question,
+            historico: chatHistory.slice(-5).map(m => `${m.role}: ${m.content}`).join('\n'),
+            nivel: studentData.level < 3 ? 'iniciante' : studentData.level < 7 ? 'intermediario' : 'avancado'
+          })
         });
-
-        if (!resposta.ok) {
-          const textoErro = await resposta.text();
-          throw new Error(textoErro || "Erro na comunicação com o servidor.");
+        
+        if (!response.ok) throw new Error('Erro na comunicação');
+        
+        const data = await response.json();
+        
+        // Remover loading
+        removeLoadingMessage(loadingId);
+        
+        // Adicionar resposta da IA
+        addMessageToChat(data.resposta, 'bot');
+        
+        // Adicionar ao histórico
+        chatHistory.push({ role: 'user', content: question });
+        chatHistory.push({ role: 'assistant', content: data.resposta });
+        
+        // Dar XP por interagir (limitado)
+        if (Math.random() > 0.7) {
+          addXP(5);
+          addMessageToChat("✨ +5 XP por participar ativamente!", 'bot');
         }
-
-        const dados = await resposta.json();
-        carregando.innerText = dados.resposta || "Não consegui gerar uma resposta agora.";
-      } catch (erro) {
-        console.error("Erro no chat de IA:", erro);
-        carregando.innerText =
-          "Erro ao conectar com a IA: " + erro.message;
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        removeLoadingMessage(loadingId);
+        addMessageToChat('❌ Desculpe, tive um problema técnico. Tente novamente em alguns instantes.', 'bot');
       }
-
-      mensagens.scrollTop = mensagens.scrollHeight;
     }
-
+    
+    function addMessageToChat(text, role) {
+      const messagesContainer = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${role}`;
+      messageDiv.innerHTML = `<div class="message-content">${text.replace(/\n/g, '<br>')}</div>`;
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+    
+    function addLoadingMessage() {
+      const id = 'loading-' + Date.now();
+      const messagesContainer = document.getElementById('chatMessages');
+      const loadingDiv = document.createElement('div');
+      loadingDiv.id = id;
+      loadingDiv.className = 'message bot';
+      loadingDiv.innerHTML = `<div class="message-content">🤔 Pensando... <span class="dot-animation">.</span></div>`;
+      messagesContainer.appendChild(loadingDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return id;
+    }
+    
+    function removeLoadingMessage(id) {
+      const element = document.getElementById(id);
+      if (element) element.remove();
+    }
+    
+    // ========== ATUALIZAR INTERFACE ==========
+    function updateUI() {
+      // Atualizar XP e nível
+      document.getElementById('xp').textContent = studentData.xp;
+      document.getElementById('level').textContent = studentData.level;
+      
+      // Atualizar barra de progresso (XP para próximo nível)
+      const xpInCurrentLevel = studentData.xp % 100;
+      const progressPercent = (xpInCurrentLevel / 100) * 100;
+      document.getElementById('progressBar').style.width = `${progressPercent}%`;
+      
+      // Atualizar roadmap
+      const roadmapContainer = document.getElementById('roadmap');
+      roadmapContainer.innerHTML = roadmapItems.map(item => `
+        <div class="roadmap-item ${studentData.completedRoadmap.includes(item.id) ? 'completed' : ''}" onclick="completeRoadmap('${item.id}')">
+          <strong>${item.title}</strong>
+          <span class="badge ${studentData.completedRoadmap.includes(item.id) ? 'badge-done' : ''}">
+            ${studentData.completedRoadmap.includes(item.id) ? '✓' : '○'}
+          </span>
+          <br>
+          <small>${item.desc}</small>
+        </div>
+      `).join('');
+    }
+    
+    function showNotification(message, type) {
+      // Criar notificação flutuante simples
+      const notif = document.createElement('div');
+      notif.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: ${type === 'success' ? 'var(--success)' : 'var(--primary)'};
+        color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+      `;
+      notif.textContent = message;
+      document.body.appendChild(notif);
+      setTimeout(() => notif.remove(), 3000);
+    }
+    
+    // ========== INICIALIZAÇÃO ==========
+    function init() {
+      loadProgress();
+      loadDailyChallenge();
+      updateCareerTip();
+      
+      // Permitir enviar com Enter (Ctrl+Enter)
+      const textarea = document.getElementById('questionInput');
+      textarea.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+          askAI();
+        }
+      });
+    }
+    
+    // Exportar funções globais
+    window.askAI = askAI;
+    window.completeRoadmap = completeRoadmap;
+    window.checkChallenge = checkChallenge;
+    window.nextTip = nextTip;
+    
+    // Iniciar
+    init();
   </script>
 </body>
 </html>
