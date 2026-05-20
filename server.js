@@ -15,89 +15,163 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 });
 
-// Prompt melhorado para ser mais útil como tutor
-const getSystemPrompt = () => `
-Você é um tutor sênior de TI da plataforma FronteiraFinal com 15+ anos de experiência em mercado e educação.
-
-REGRAS IMPORTANTES:
-1. NUNCA entregue código pronto sem explicar o raciocínio
-2. Use analogias do mundo real para explicar conceitos abstratos
-3. Sempre pergunte o que o aluno já tentou antes
-4. Dê dicas de boas práticas de mercado
-5. Mencione ferramentas profissionais (debugger, linters, etc)
-6. Relacione o conteúdo com situações reais de trabalho
-
-ESTRUTURA DA RESPOSTA:
-- Entenda o problema (paráfrase)
-- Explique o conceito fundamental
-- Dê um exemplo prático passo a passo
-- Mostre uma variação ou desafio
-- Ofereça material complementar
-
-TÓPICOS QUE VOCÊ DOMINA:
-- HTML5 semântico, acessibilidade, SEO
-- CSS moderno (Flexbox, Grid, animações, responsividade)
-- JavaScript (ES6+, async/await, promises, manipulação de DOM)
-- React, Vue.js, Angular (conceitos)
-- Python (POO, decorators, generators)
-- Banco de dados (SQL, modelagem, índices, normalização)
-- Git/GitHub (fluxos de trabalho, resolução de conflitos)
-- Algoritmos e estruturas de dados
-- Clean Code, padrões de projeto
-- Metodologias ágeis (Scrum, Kanban)
-- Preparação para entrevistas técnicas
-
-Se o aluno pedir resolução de exercício, guie-o com perguntas Socráticas.
-`;
-
-app.post("/api/suporte-ai", async (req, res) => {
-  try {
-    const { pergunta, historico, nivel } = req.body;
-
-    if (!pergunta) {
-      return res.status(400).json({
-        erro: "Por favor, digite sua dúvida."
-      });
+// Banco de dados simulado de questões (em produção, use um banco real)
+const questionBank = {
+  html: [
+    {
+      id: 1,
+      question: "Qual tag HTML é usada para criar um link?",
+      options: ["&lt;link&gt;", "&lt;a&gt;", "&lt;href&gt;", "&lt;url&gt;"],
+      correct: 1,
+      explanation: "A tag &lt;a&gt; (anchor) é usada para criar hyperlinks em HTML."
+    },
+    {
+      id: 2,
+      question: "Qual atributo define o destino de um link?",
+      options: ["src", "link", "href", "url"],
+      correct: 2,
+      explanation: "O atributo href (Hypertext Reference) define o destino do link."
     }
+  ],
+  css: [
+    {
+      id: 1,
+      question: "Qual propriedade CSS muda a cor do texto?",
+      options: ["text-color", "color", "font-color", "bgcolor"],
+      correct: 1,
+      explanation: "A propriedade 'color' define a cor do texto em CSS."
+    },
+    {
+      id: 2,
+      question: "Qual propriedade cria espaço dentro de um elemento?",
+      options: ["margin", "padding", "border", "spacing"],
+      correct: 1,
+      explanation: "Padding cria espaço interno entre o conteúdo e a borda do elemento."
+    }
+  ],
+  javascript: [
+    {
+      id: 1,
+      question: "Qual método converte JSON para objeto JavaScript?",
+      options: ["JSON.stringify()", "JSON.parse()", "JSON.convert()", "JSON.toObject()"],
+      correct: 1,
+      explanation: "JSON.parse() converte uma string JSON em um objeto JavaScript."
+    },
+    {
+      id: 2,
+      question: "Como declarar uma variável constante em JavaScript?",
+      options: ["let", "var", "const", "constant"],
+      correct: 2,
+      explanation: "'const' é usado para declarar variáveis que não podem ser reatribuídas."
+    }
+  ],
+  python: [
+    {
+      id: 1,
+      question: "Qual função exibe algo no console em Python?",
+      options: ["console.log()", "echo()", "print()", "output()"],
+      correct: 2,
+      explanation: "print() é a função embutida do Python para exibir informações."
+    }
+  ],
+  sql: [
+    {
+      id: 1,
+      question: "Qual comando SQL recupera dados de um banco?",
+      options: ["GET", "SELECT", "RETRIEVE", "EXTRACT"],
+      correct: 1,
+      explanation: "SELECT é usado para consultar e recuperar dados de tabelas."
+    }
+  ],
+  git: [
+    {
+      id: 1,
+      question: "Qual comando cria um novo repositório Git?",
+      options: ["git start", "git init", "git create", "git new"],
+      correct: 1,
+      explanation: "git init inicializa um novo repositório Git no diretório atual."
+    }
+  ]
+};
 
-    const nivelContexto = nivel === "iniciante" 
-      ? "Explique como se o aluno nunca tivesse visto o assunto antes. Use analogias simples." 
-      : nivel === "avancado"
-      ? "Use terminologia técnica mais profunda e mencione edge cases e otimizações."
-      : "Equilibre simplicidade com precisão técnica.";
-
-    const resposta = await ai.models.generateContent({
+// Endpoint para avaliações
+app.post("/api/avaliacao", async (req, res) => {
+  try {
+    const { materia, respostas } = req.body;
+    
+    if (!materia || !questionBank[materia]) {
+      return res.status(400).json({ erro: "Matéria inválida" });
+    }
+    
+    const questoes = questionBank[materia];
+    let acertos = 0;
+    const resultados = [];
+    
+    respostas.forEach((resposta, index) => {
+      const questao = questoes[index];
+      const isCorrect = resposta === questao.correct;
+      if (isCorrect) acertos++;
+      
+      resultados.push({
+        questao: questao.question,
+        correta: isCorrect,
+        explicacao: questao.explanation,
+        respostaCorreta: questao.options[questao.correct]
+      });
+    });
+    
+    const nota = (acertos / questoes.length) * 10;
+    
+    // Gerar feedback personalizado com IA
+    const feedbackIA = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: `${getSystemPrompt()}
+      contents: `Como tutor de TI, analise este desempenho:
+      
+Matéria: ${materia}
+Acertos: ${acertos}/${questoes.length}
+Nota: ${nota.toFixed(1)}
 
-NÍVEL DO ALUNO: ${nivelContexto}
-
-${historico ? `CONTEXTO DA CONVERSA:\n${historico}\n` : ""}
-
-PERGUNTA DO ALUNO:
-${pergunta}
-
-Responda seguindo a estrutura definida. Seja paciente, encorajador e prático.`
+Dê um feedback construtivo (máximo 3 linhas) incentivando o aluno a melhorar.`
     });
-
+    
     res.json({
-      resposta: resposta.text,
-      timestamp: new Date().toISOString()
+      materia,
+      nota: nota.toFixed(1),
+      acertos,
+      total: questoes.length,
+      resultados,
+      feedback: feedbackIA.text,
+      recomendacoes: nota < 6 ? "Revise os conceitos básicos e tente novamente" : 
+                     nota < 8 ? "Bom trabalho! Continue praticando" : 
+                     "Excelente! Você domina esta matéria"
     });
-
+    
   } catch (error) {
-    console.error("ERRO GEMINI:", error);
-
-    res.status(500).json({
-      erro: "Erro ao processar sua dúvida. Tente reformular a pergunta.",
-      detalhe: error.message
-    });
+    console.error("Erro na avaliação:", error);
+    res.status(500).json({ erro: "Erro ao processar avaliação" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Sistema de notas do aluno (simulado)
+const studentGrades = {};
 
+app.post("/api/salvar-nota", (req, res) => {
+  const { alunoId, materia, nota, data } = req.body;
+  
+  if (!studentGrades[alunoId]) studentGrades[alunoId] = {};
+  if (!studentGrades[alunoId][materia]) studentGrades[alunoId][materia] = [];
+  
+  studentGrades[alunoId][materia].push({ nota, data });
+  
+  res.json({ success: true });
+});
+
+app.get("/api/historico-notas/:alunoId", (req, res) => {
+  const { alunoId } = req.params;
+  res.json(studentGrades[alunoId] || {});
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📚 Acesse: http://localhost:${PORT}`);
 });

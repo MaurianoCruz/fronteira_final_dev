@@ -401,6 +401,544 @@
           <button onclick="askAI()">Enviar 📤</button>
         </div>
       </div>
+<!-- Seção de Avaliações e Notas -->
+<div class="grades-section" id="gradesSection">
+  <div class="section-header">
+    <h2>📝 Sistema de Avaliações</h2>
+    <p>Teste seus conhecimentos e acompanhe seu progresso acadêmico</p>
+  </div>
+  
+  <!-- Seletor de matéria -->
+  <div class="subject-selector">
+    <select id="subjectSelect" onchange="loadQuestions()">
+      <option value="html">🌐 HTML</option>
+      <option value="css">🎨 CSS</option>
+      <option value="javascript">⚡ JavaScript</option>
+      <option value="python">🐍 Python</option>
+      <option value="sql">🗄️ SQL</option>
+      <option value="git">📦 Git/GitHub</option>
+    </select>
+    <button onclick="startQuiz()" class="btn-primary">▶️ Iniciar Quiz</button>
+  </div>
+  
+  <!-- Painel de Notas -->
+  <div class="grades-panel">
+    <div class="average-grade">
+      <h3>📊 Média Geral</h3>
+      <div class="grade-circle" id="averageGrade">0.0</div>
+    </div>
+    
+    <div class="grades-history">
+      <h3>📈 Histórico de Notas</h3>
+      <canvas id="gradesChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+  
+  <!-- Quiz Container -->
+  <div id="quizContainer" style="display: none;">
+    <div class="quiz-header">
+      <h3 id="quizSubject"></h3>
+      <div class="quiz-progress">
+        <span id="currentQuestion">1</span> / <span id="totalQuestions"></span>
+      </div>
+    </div>
+    
+    <div id="questionsContainer"></div>
+    
+    <div class="quiz-actions">
+      <button onclick="submitQuiz()" class="btn-success">✅ Enviar Respostas</button>
+      <button onclick="closeQuiz()" class="btn-secondary">❌ Cancelar</button>
+    </div>
+  </div>
+  
+  <!-- Resultados -->
+  <div id="resultsContainer" class="results-container" style="display: none;"></div>
+</div>
+
+<style>
+.grades-section {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.subject-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.subject-selector select {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--dark);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.grades-panel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .grades-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grade-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(var(--primary) 0deg, var(--dark) 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.grade-circle::before {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--darker);
+}
+
+.grade-circle span {
+  position: relative;
+  z-index: 1;
+}
+
+.grades-history {
+  flex: 1;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary);
+}
+
+.question-item {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s;
+}
+
+.question-item:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.question-text {
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: var(--light);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.option:hover {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.option input {
+  cursor: pointer;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.btn-success:hover {
+  transform: scale(1.05);
+}
+
+.results-container {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1));
+  border-radius: 1rem;
+  animation: slideIn 0.5s ease;
+}
+
+.result-item {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+}
+
+.result-item.correct {
+  background: rgba(16, 185, 129, 0.2);
+  border-left: 3px solid var(--success);
+}
+
+.result-item.incorrect {
+  background: rgba(239, 68, 68, 0.2);
+  border-left: 3px solid var(--danger);
+}
+
+.feedback-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.feedback-excellent {
+  background: var(--success);
+  color: white;
+}
+
+.feedback-good {
+  background: var(--warning);
+  color: var(--dark);
+}
+
+.feedback-study {
+  background: var(--danger);
+  color: white;
+}
+</style>
+
+<script>
+  // ========== SISTEMA DE NOTAS ==========
+  let currentQuestions = [];
+  let userAnswers = [];
+  let quizActive = false;
+  let gradesChart = null;
+  
+  // Carregar questões da matéria selecionada
+  async function loadQuestions() {
+    const subject = document.getElementById('subjectSelect').value;
+    
+    // Em produção, isso viria do backend
+    // Por enquanto, usando o banco simulado
+    
+    const questionBankSimulado = {
+      html: [
+        { id: 1, question: "Qual tag HTML é usada para criar um link?", options: ["&lt;link&gt;", "&lt;a&gt;", "&lt;href&gt;", "&lt;url&gt;"], correct: 1 },
+        { id: 2, question: "Qual atributo define o destino de um link?", options: ["src", "link", "href", "url"], correct: 2 },
+        { id: 3, question: "Qual tag é usada para inserir uma imagem?", options: ["&lt;img&gt;", "&lt;image&gt;", "&lt;src&gt;", "&lt;pic&gt;"], correct: 0 }
+      ],
+      javascript: [
+        { id: 1, question: "Qual método converte JSON para objeto?", options: ["JSON.stringify()", "JSON.parse()", "JSON.convert()", "JSON.toObject()"], correct: 1 },
+        { id: 2, question: "Como declarar uma variável constante?", options: ["let", "var", "const", "constant"], correct: 2 },
+        { id: 3, question: "Qual operador é usado para comparação estrita?", options: ["==", "=", "===", "!=="], correct: 2 }
+      ]
+    };
+    
+    currentQuestions = questionBankSimulado[subject] || questionBankSimulado.html;
+    userAnswers = new Array(currentQuestions.length).fill(null);
+  }
+  
+  // Iniciar quiz
+  async function startQuiz() {
+    await loadQuestions();
+    quizActive = true;
+    
+    document.getElementById('quizContainer').style.display = 'block';
+    document.getElementById('resultsContainer').style.display = 'none';
+    document.getElementById('quizSubject').textContent = `Quiz: ${document.getElementById('subjectSelect').options[document.getElementById('subjectSelect').selectedIndex].text}`;
+    document.getElementById('totalQuestions').textContent = currentQuestions.length;
+    
+    renderQuestions();
+  }
+  
+  // Renderizar questões
+  function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    container.innerHTML = currentQuestions.map((q, idx) => `
+      <div class="question-item">
+        <div class="question-text">${idx + 1}. ${q.question}</div>
+        <div class="options">
+          ${q.options.map((opt, optIdx) => `
+            <label class="option">
+              <input type="radio" name="q${idx}" value="${optIdx}" 
+                ${userAnswers[idx] === optIdx ? 'checked' : ''}
+                onchange="saveAnswer(${idx}, ${optIdx})">
+              <span>${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // Salvar resposta
+  function saveAnswer(questionIndex, answerIndex) {
+    userAnswers[questionIndex] = answerIndex;
+  }
+  
+  // Submeter quiz
+  async function submitQuiz() {
+    // Verificar se todas foram respondidas
+    const unanswered = userAnswers.some(a => a === null);
+    if (unanswered) {
+      showNotification('❌ Responda todas as questões antes de enviar!', 'error');
+      return;
+    }
+    
+    // Calcular nota
+    let correct = 0;
+    const results = [];
+    
+    userAnswers.forEach((answer, idx) => {
+      const isCorrect = answer === currentQuestions[idx].correct;
+      if (isCorrect) correct++;
+      
+      results.push({
+        question: currentQuestions[idx].question,
+        correct: isCorrect,
+        userAnswer: currentQuestions[idx].options[answer],
+        correctAnswer: currentQuestions[idx].options[currentQuestions[idx].correct],
+        explanation: currentQuestions[idx].explanation || "Revise este conceito"
+      });
+    });
+    
+    const nota = (correct / currentQuestions.length) * 10;
+    
+    // Salvar nota no histórico
+    const alunoId = localStorage.getItem('studentId') || 'student_' + Date.now();
+    if (!localStorage.getItem('studentId')) {
+      localStorage.setItem('studentId', alunoId);
+    }
+    
+    const subject = document.getElementById('subjectSelect').value;
+    const gradeData = {
+      alunoId,
+      materia: subject,
+      nota: nota.toFixed(1),
+      data: new Date().toISOString()
+    };
+    
+    try {
+      await fetch('/api/salvar-nota', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gradeData)
+      });
+      
+      // Adicionar XP baseado na nota
+      const xpGanho = Math.floor(nota * 10);
+      addXP(xpGanho);
+      
+      // Mostrar resultados
+      showResults(results, nota, subject);
+      
+      // Atualizar gráfico
+      await loadGradeHistory();
+      
+    } catch (error) {
+      console.error('Erro ao salvar nota:', error);
+      showResults(results, nota, subject);
+    }
+    
+    quizActive = false;
+  }
+  
+  // Mostrar resultados
+  function showResults(results, nota, subject) {
+    const container = document.getElementById('resultsContainer');
+    const feedbackClass = nota >= 8 ? 'feedback-excellent' : nota >= 6 ? 'feedback-good' : 'feedback-study';
+    const feedbackText = nota >= 8 ? 'Excelente!' : nota >= 6 ? 'Bom trabalho!' : 'Continue estudando!';
+    
+    container.innerHTML = `
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <h3>📊 Resultado da Avaliação</h3>
+        <div style="font-size: 3rem; font-weight: bold; color: ${nota >= 6 ? 'var(--success)' : 'var(--danger)'}">
+          ${nota.toFixed(1)} / 10
+        </div>
+        <div style="margin-top: 0.5rem;">
+          <span class="feedback-badge ${feedbackClass}">${feedbackText}</span>
+        </div>
+        <p style="margin-top: 1rem;">🎉 +${Math.floor(nota * 10)} XP ganho!</p>
+      </div>
+      
+      <div style="margin-top: 1rem;">
+        <h4>📝 Revisão das Questões:</h4>
+        ${results.map((r, idx) => `
+          <div class="result-item ${r.correct ? 'correct' : 'incorrect'}">
+            <strong>${idx + 1}. ${r.question}</strong>
+            <br>
+            Sua resposta: ${r.userAnswer} ${r.correct ? '✓' : '✗'}
+            ${!r.correct ? `<br>Resposta correta: ${r.correctAnswer}` : ''}
+            <br>
+            <small>💡 ${r.explanation}</small>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div style="margin-top: 1rem; text-align: center;">
+        <button onclick="startQuiz()" class="btn-primary">🔄 Tentar Novamente</button>
+        <button onclick="closeQuiz()" class="btn-secondary" style="margin-left: 0.5rem;">✖️ Fechar</button>
+      </div>
+    `;
+    
+    container.style.display = 'block';
+    document.getElementById('quizContainer').style.display = 'none';
+  }
+  
+  // Fechar quiz
+  function closeQuiz() {
+    document.getElementById('quizContainer').style.display = 'none';
+    document.getElementById('resultsContainer').style.display = 'none';
+    quizActive = false;
+  }
+  
+  // Carregar histórico de notas
+  async function loadGradeHistory() {
+    const alunoId = localStorage.getItem('studentId');
+    if (!alunoId) return;
+    
+    try {
+      const response = await fetch(`/api/historico-notas/${alunoId}`);
+      const data = await response.json();
+      
+      // Calcular média geral
+      let totalNotas = 0;
+      let totalMaterias = 0;
+      const materiasNotas = {};
+      
+      for (const materia in data) {
+        if (data[materia].length > 0) {
+          const ultimaNota = data[materia][data[materia].length - 1].nota;
+          materiasNotas[materia] = ultimaNota;
+          totalNotas += ultimaNota;
+          totalMaterias++;
+        }
+      }
+      
+      const mediaGeral = totalMaterias > 0 ? (totalNotas / totalMaterias).toFixed(1) : 0;
+      updateAverageGrade(mediaGeral);
+      
+      // Criar gráfico
+      if (gradesChart) {
+        gradesChart.destroy();
+      }
+      
+      const ctx = document.getElementById('gradesChart').getContext('2d');
+      gradesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(materiasNotas).map(m => m.toUpperCase()),
+          datasets: [{
+            label: 'Última Nota',
+            data: Object.values(materiasNotas),
+            backgroundColor: 'rgba(99, 102, 241, 0.6)',
+            borderColor: 'rgba(99, 102, 241, 1)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10,
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' }
+            },
+            x: {
+              ticks: { color: 'white' }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: 'white' }
+            }
+          }
+        }
+      });
+      
+    } catch (error) {
+      console.error('Erro ao carregar histórico:', error);
+    }
+  }
+  
+  // Atualizar círculo de média
+  function updateAverageGrade(media) {
+    const circle = document.getElementById('averageGrade');
+    const percent = (media / 10) * 100;
+    const angle = (percent / 100) * 360;
+    
+    circle.style.background = `conic-gradient(var(--primary) 0deg ${angle}deg, var(--dark) ${angle}deg 360deg)`;
+    circle.innerHTML = `<span>${media}</span>`;
+  }
+  
+  // Inicializar gráfico ao carregar
+  document.addEventListener('DOMContentLoaded', () => {
+    loadGradeHistory();
+  });
+</script>
+
+<!-- Adicionar Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
       <!-- Desafios interativos -->
       <div class="challenges-section">
