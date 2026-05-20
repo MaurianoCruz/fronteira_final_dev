@@ -6,9 +6,9 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@google/genai": "latest",
     "cors": "latest",
     "dotenv": "latest",
-    "express": "latest",
-    "openai": "latest"
+    "express": "latest"
   }
 }
